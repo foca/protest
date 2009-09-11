@@ -4,33 +4,31 @@ module Testicles
       @stream = stream
     end
 
-    def on_end
-      puts
-      puts
-      report_pending_tests unless pendings.empty?
-      report_errors unless errors.empty?
-      puts summary
-      puts running_time
+    on :end do |report|
+      report.instance_eval do
+        puts
+        puts
+        report_pending_tests unless pendings.empty?
+        report_errors unless errors.empty?
+        puts summary
+        puts running_time
+      end
     end
 
-    def on_pass(name)
-      super
-      print(".")
+    on :pass do |report, pass|
+      report.send(:print, ".")
     end
 
-    def on_pending(name)
-      super
-      print("P")
+    on :pending do |report, pending|
+      report.send(:print, "P")
     end
 
-    def on_failure(name)
-      super
-      print("F")
+    on :failure do |report, failure|
+      report.send(:print, "F")
     end
 
-    def on_error(name)
-      super
-      print("E")
+    on :error do |report, error|
+      report.send(:print, "E")
     end
 
     private

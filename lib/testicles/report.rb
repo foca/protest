@@ -2,6 +2,39 @@ module Testicles
   class Report
     attr_accessor :time_elapsed
 
+    def self.on(event, &block)
+      define_method(:"on_#{event}") do |*args|
+        begin
+          super(*args)
+        rescue NoMethodError
+        end
+
+        block.call(self, *args)
+      end
+    end
+
+    on :pass do |report, pass|
+      report.passes << PassedTest.new(pass)
+    end
+
+    on :pending do |report, pending|
+      report.pendings << PendingTest.new(pending)
+    end
+
+    on :failure do |report, failure|
+      failure = FailedTest.new(failure)
+      report.failures << failure
+      report.errors << failure
+    end
+
+    on :error do |report, error|
+      report.errors << ErroredTest.new(error)
+    end
+
+    on :assertion do |report|
+      report.add_assertion
+    end
+
     def report(name)
       yield
       on_pass(name)
@@ -11,29 +44,6 @@ module Testicles
       on_failure(e)
     rescue Exception => e
       on_error(e)
-    end
-
-    def on_pass(name)
-      passes << PassedTest.new(name)
-    end
-
-    def on_pending(error)
-      pendings << PendingTest.new(error)
-    end
-
-    def on_failure(error)
-      error = FailedTest.new(error)
-      failures << error
-      errors << error
-    end
-
-    def on_error(error)
-      errors << ErroredTest.new(error)
-    end
-
-    def on_assertion
-      @assertions ||= 0
-      @assertions += 1
     end
 
     def pendings
