@@ -53,8 +53,8 @@ module Testicles
         puts "Failures:"
         puts
 
-        pad_indexes = errors.size.to_s.size
-        errors.each_with_index do |error, index|
+        pad_indexes = failures_and_errors.size.to_s.size
+        failures_and_errors.each_with_index do |error, index|
           puts "  #{pad(index+1, pad_indexes)}) #{error.type}: `#{error.message}' (on line #{error.line} of `#{error.file}')"
           puts indent(error.backtrace[0..2].join("\n"), 6 + pad_indexes)
           puts

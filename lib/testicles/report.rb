@@ -24,11 +24,13 @@ module Testicles
     on :failure do |report, failure|
       failure = FailedTest.new(failure)
       report.failures << failure
-      report.errors << failure
+      report.failures_and_errors << failure
     end
 
     on :error do |report, error|
-      report.errors << ErroredTest.new(error)
+      error = ErroredTest.new(error)
+      report.errors << error
+      report.failures_and_errors << error
     end
 
     on :assertion do |report|
@@ -60,6 +62,10 @@ module Testicles
 
     def errors
       @errors ||= []
+    end
+
+    def failures_and_errors
+      @failures_and_errors ||= []
     end
 
     def add_assertion
