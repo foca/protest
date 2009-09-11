@@ -5,31 +5,32 @@ module Testicles
     end
 
     def on_end
-      @stream.puts
-      @stream.puts
+      puts
+      puts
+      report_pending_tests unless pendings.empty?
       report_errors unless errors.empty?
-      @stream.puts summary
-      @stream.puts running_time
+      puts summary
+      puts running_time
     end
 
     def on_pass(name)
       super
-      @stream.print(".")
+      print(".")
     end
 
     def on_pending(name)
       super
-      @stream.print("P")
+      print("P")
     end
 
     def on_failure(name)
       super
-      @stream.print("F")
+      print("F")
     end
 
     def on_error(name)
       super
-      @stream.print("E")
+      print("E")
     end
 
     private
@@ -38,15 +39,27 @@ module Testicles
         "Ran in #{@time_elapsed} seconds"
       end
 
+      def report_pending_tests
+        puts "Pending tests:"
+        puts
+
+        pad_indexes = pendings.size.to_s.size
+        pendings.each_with_index do |pending, index|
+          puts "  #{pad(index+1, pad_indexes)}) #{pending.message}"
+          puts indent("on line #{pending.line} of `#{pending.file}'", 6 + pad_indexes)
+          puts
+        end
+      end
+
       def report_errors
-        @stream.puts "Failures:"
-        @stream.puts
+        puts "Failures:"
+        puts
 
         pad_indexes = errors.size.to_s.size
         errors.each_with_index do |error, index|
-          @stream.puts "  #{pad(index+1, pad_indexes)}) #{error.type}: `#{error.message}' (on #{error.line} of `#{error.file}')"
-          @stream.puts indent(error.backtrace[0..2].join("\n"), 6 + pad_indexes)
-          @stream.puts
+          puts "  #{pad(index+1, pad_indexes)}) #{error.type}: `#{error.message}' (on line #{error.line} of `#{error.file}')"
+          puts indent(error.backtrace[0..2].join("\n"), 6 + pad_indexes)
+          puts
         end
       end
 
@@ -69,6 +82,14 @@ module Testicles
 
       def pad(str, amount)
         " " * (amount - str.to_s.size) + str.to_s
+      end
+
+      def print(*args)
+        @stream.print(*args)
+      end
+
+      def puts(*args)
+        @stream.puts(*args)
       end
   end
 
