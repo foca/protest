@@ -2,10 +2,6 @@ module Testicles
   class Report
     attr_accessor :time_elapsed
 
-    def run(*test_cases)
-      Runner.new(self).run(*test_cases)
-    end
-
     def report(name)
       yield
       on_pass(name)

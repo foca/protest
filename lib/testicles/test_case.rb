@@ -60,5 +60,9 @@ module Testicles
       @tests ||= []
     end
     private_class_method :tests
+
+    def self.inherited(child)
+      Testicles.add_test_case(child)
+    end
   end
 end

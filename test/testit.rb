@@ -40,5 +40,3 @@ class A < Testicles::TestCase
     assert(@foo % 2 != 0)
   end
 end
-
-Testicles.report(:progress).run(A)
