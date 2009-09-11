@@ -5,6 +5,20 @@ class A < Testicles::TestCase
     @foo = 1
   end
 
+  context "nested contexts" do
+    setup do
+      @bar = 2
+    end
+
+    test "run setup blocks from their parents" do
+      assert @foo == 1
+    end
+
+    test "and run setup and teardown blocks from themselves" do
+      assert @bar > @foo
+    end
+  end
+
   test "this one passes" do
     assert true
   end
@@ -38,5 +52,9 @@ class A < Testicles::TestCase
 
   test "passes again" do
     assert(@foo % 2 != 0)
+  end
+
+  test "tests don't know anything about the child contexts" do
+    assert @bar.nil?
   end
 end

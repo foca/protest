@@ -62,8 +62,29 @@ If you need to run code before or after each test, declare a +setup+ or
 
 == Nested contexts
 
-*TODO*: We will support nested contexts like rspec[http://rspec.info] or
-Contest[http://github.com/citrusbyte/contest] allows for Test::Unit.
+Break down your test into logical chunks with nested contexts:
+
+    class UserTest < Testicles::TestCase
+      setup do
+        @user = User.make
+      end
+
+      context "validations" do
+        test "validates name" do
+          @user.name = nil
+          assert !@user.valid?
+        end
+
+        # etc, etc
+      end
+
+      context "something else" do
+        # your get the idea
+      end
+    end
+
+Any +setup+ or +teardown+ blocks you defined in a context will run in that
+context and in _any_ other context nested in it.
 
 == Pending tests
 

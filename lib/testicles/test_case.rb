@@ -1,5 +1,9 @@
 module Testicles
   class TestCase
+    class << self
+      attr_accessor :description
+    end
+
     def self.run(result)
       tests.each {|test| test.run(result) }
     end
@@ -20,6 +24,13 @@ module Testicles
         instance_eval(&block)
         super
       end
+    end
+
+    def self.context(description, &block)
+      subclass = Class.new(self)
+      subclass.class_eval(&block) if block
+      subclass.description = "#{self.description} #{description}".strip
+      const_set(sanitize_description(description), subclass)
     end
 
     attr_reader :test, :name
@@ -60,6 +71,11 @@ module Testicles
       @tests ||= []
     end
     private_class_method :tests
+
+    def self.sanitize_description(description)
+      "Test#{description.gsub(/\W+/, ' ').strip.gsub(/(^| )(\w)/) { $2.upcase }}".to_sym
+    end
+    private_class_method :sanitize_description
 
     def self.inherited(child)
       Testicles.add_test_case(child)
