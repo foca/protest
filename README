@@ -1,0 +1,103 @@
+= Testicles, the ballsy test framework
+
+    require "testicles"
+
+    class UserTest < Testicles::TestCase
+      setup do
+        @user = User.new(:name => "John Doe", :email => "john@example.org")
+      end
+
+      test "has a name" do
+        assert @user.name == "John Doe"
+      end
+
+      test "has an email" do
+        assert @user.email == "john@example.org"
+      end
+    end
+
+Testicles is a small, simple, and easy-to-extend testing framework for ruby. It
+was written as a replacement for Test::Unit, given how awful its code is, and
+how difficult it is to extend in order to add new features.
+
+I believe in minimalistic software, which is easily understood, easy to test,
+and specially, easy to extend for third parties. That's where I'm aiming with
+Testicles.
+
+== Assertions
+
+You probably wonder why the example doesn't have any assertion other than
++assert+. Why not +assert_equal+, right? Well, the idea is to keep it slim. If
+you want to use more assertions, you're free to define your own. Also, since it
+uses the same assertion API as Test::Unit, you can just require its assertions:
+
+    require "testicles"
+    require "test/unit/assertions"
+
+    class UserTest < Testicles::TestCase
+      include Test::Unit::Assertions
+
+      # now you can use all of Test::Unit assertions. For free.
+    end
+
+You can even define rspec-like matchers if you want.
+
+== Setup and teardown
+
+If you need to run code before or after each test, declare a +setup+ or
++teardown+ block (respectively.)
+
+    class UserTest < Testicles::TestCase
+      setup do # this runs before each test
+        @user = User.create(:name => "John")
+      end
+
+      teardown do # this runs after each test
+        @user.destroy
+      end
+    end
+
+*TODO*: Implement +global_setup+ and +global_teardown+ (analogous to
+<tt>before(:all)</tt> and <tt>after(:all)</tt> in rspec.)
+
+== Nested contexts
+
+*TODO*: We will support nested contexts like rspec[http://rspec.info] or
+Contest[http://github.com/citrusbyte/contest] allows for Test::Unit.
+
+== Pending tests
+
+There are two ways of marking a test as pending. You can declare a test with no
+body:
+
+    class SomeTest < Testicles::TestCase
+      test "this test will be marked as pending"
+
+      test "this tests is also pending"
+
+      test "this test isn't pending" do
+        assert true
+      end
+    end
+
+Or you can call the +pending+ method from inside your test.
+
+    class SomeTest < Testicles::TestCase
+      test "this test is pending" do
+        pending "oops, this doesn't work"
+        assert false
+      end
+    end
+
+== (Best|Worst) name ever
+
+I personally believe the name is full of win. But I understand it's not the
+most marketable name :)
+
+If you hate it, suggest a better name. Or just fork it and name your version
+different, it's open source, after all.
+
+== Legal
+
+Author:: Nicolás Sanguinetti — http://nicolassanguinetti.info
+License:: MIT (see bundled LICENSE file for more info)
