@@ -18,10 +18,6 @@ module Testicles
       end
     end
 
-    def pending(name, &block)
-      tests << new(name)
-    end
-
     def run(result)
       tests.each {|test| test.run(result) }
     end

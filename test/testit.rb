@@ -13,7 +13,10 @@ class A < Testicles::TestCase
     assert false
   end
 
-  pending "a pending test" do
+  test "a pending test"
+
+  test "another pending test" do
+    pending "this won't raise"
     raise "foo"
   end
 
