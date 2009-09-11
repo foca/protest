@@ -1,36 +1,26 @@
 module Testicles
-  module DSL
-    def test(name, &block)
+  class TestCase
+    def self.run(result)
+      tests.each {|test| test.run(result) }
+    end
+
+    def self.test(name, &block)
       tests << new(name, &block)
     end
 
-    def setup(&block)
+    def self.setup(&block)
       define_method :setup do
         super
         instance_eval(&block)
       end
     end
 
-    def teardown(&block)
+    def self.teardown(&block)
       define_method :teardown do
         instance_eval(&block)
         super
       end
     end
-
-    def run(result)
-      tests.each {|test| test.run(result) }
-    end
-
-    private
-
-      def tests
-        @tests ||= []
-      end
-  end
-
-  class TestCase
-    extend DSL
 
     attr_reader :test, :name
 
@@ -65,5 +55,10 @@ module Testicles
     def pending(message=name)
       raise Pending, message
     end
+
+    def self.tests
+      @tests ||= []
+    end
+    private_class_method :tests
   end
 end
