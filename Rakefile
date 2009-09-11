@@ -5,9 +5,9 @@ rescue LoadError
 end
 
 Rake::RDocTask.new do |rd|
-  rd.main = "README"
+  rd.main = "README.rdoc"
   rd.title = "API Documentation for Testicles"
-  rd.rdoc_files.include("README", "LICENSE", "lib/**/*.rb")
+  rd.rdoc_files.include("README.rdoc", "LICENSE", "lib/**/*.rb")
   rd.rdoc_dir = "doc"
 end
 
