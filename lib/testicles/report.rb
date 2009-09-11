@@ -52,12 +52,17 @@ module Testicles
       @errors ||= []
     end
 
+    def add_assertion
+      @assertions ||= 0
+      @assertions += 1
+    end
+
     def assertions
       @assertions || 0
     end
 
     def total_tests
-      passes.size + failures.size + errors.size
+      passes.size + failures.size + errors.size + pendings.size
     end
 
     class PassedTest < Struct.new(:message)
