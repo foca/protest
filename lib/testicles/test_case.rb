@@ -134,14 +134,14 @@ module Testicles
     # Run a test in isolation. Any +setup+ and +teardown+ blocks defined for
     # this test case will be run as expected.
     #
-    # You need to provide a Report instance to handle errors/pending tests/etc.
+    # You need to provide a Runner instance to handle errors/pending tests/etc.
     #
     # If the test's block is nil, then the test will be marked as pending and
     # nothing will be run.
-    def run(result)
-      @result = result
+    def run(runner)
+      @runner = runner
 
-      result.report(name) do
+      runner.report(name) do
         pending if test.nil?
 
         setup
@@ -154,8 +154,7 @@ module Testicles
     # condition isn't met. You can override the default failure message
     # by passing it as an argument.
     def assert(condition, message="Expected condition to be satisfied")
-      @result.on_assertion
-      raise AssertionFailed, message unless condition
+      @runner.assert(condition, message)
     end
 
     # Make the test be ignored as pending. You can override the default message

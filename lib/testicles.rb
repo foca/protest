@@ -70,6 +70,7 @@ module Testicles
 end
 
 require "testicles/test_case"
+require "testicles/tests"
 require "testicles/runner"
 require "testicles/report"
 require "testicles/reports"

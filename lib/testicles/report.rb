@@ -60,20 +60,6 @@ module Testicles
       report.add_assertion
     end
 
-    # Run a test and report if it passes, fails, or is pending. Takes the name
-    # of the test as an argument. You can avoid reporting a passed test by
-    # passing +false+ as a second argument.
-    def report(name, report_success=true)
-      yield
-      on_pass(PassedTest.new(name)) if report_success
-    rescue Pending => e
-      on_pending(PendingTest.new(name, e))
-    rescue AssertionFailed => e
-      on_failure(FailedTest.new(name, e))
-    rescue Exception => e
-      on_error(ErroredTest.new(name, e))
-    end
-
     # List all the tests (as PendingTest instances) that were pending.
     def pendings
       @pendings ||= []
@@ -120,57 +106,6 @@ module Testicles
     # Seconds taken since the test suite started running
     def time_elapsed
       Time.now - @started_at
-    end
-
-    # Encapsulate the relevant information for a test that passed.
-    class PassedTest
-      # Name of the test that passed. Useful for certain reports.
-      attr_reader :test_name
-
-      def initialize(test_name) #:nodoc:
-        @test_name = test_name
-      end
-    end
-
-    # Encapsulates the relevant information for a test which failed an
-    # assertion.
-    class FailedTest < PassedTest
-      def initialize(test_name, error) #:nodoc:
-        super(test_name)
-        @error = error
-      end
-
-      # Message with which it failed the assertion
-      def error_message
-        @error.message
-      end
-
-      # Line of the file where the assertion failed
-      def line
-        backtrace.first.split(":")[1]
-      end
-
-      # File where the assertion failed
-      def file
-        backtrace.first.split(":")[0]
-      end
-
-      # Backtrace of the assertion
-      def backtrace
-        @error.backtrace
-      end
-    end
-
-    # Encapsulates the relevant information for a test which raised an
-    # unrescued exception.
-    class ErroredTest < FailedTest
-    end
-
-    # Encapsulates the relevant information for a test that the user marked as
-    # pending.
-    class PendingTest < FailedTest
-      # Message passed to TestCase#pending, if any.
-      alias_method :pending_message, :error_message
     end
   end
 
@@ -308,7 +243,7 @@ module Testicles
 
       pad_indexes = failures_and_errors.size.to_s.size
       failures_and_errors.each_with_index do |error, index|
-        colorize_as = Report::ErroredTest === error ? :errored : :failed
+        colorize_as = ErroredTest === error ? :errored : :failed
         puts "  #{pad(index+1, pad_indexes)}) #{test_type(error)}: `#{error.test_name}' (on line #{error.line} of `#{error.file}')", colorize_as
         puts indent("With `#{error.error_message}'", 6 + pad_indexes), colorize_as
         indent(error.backtrace[0..2], 6 + pad_indexes).each {|backtrace| puts backtrace, colorize_as }
@@ -345,8 +280,8 @@ module Testicles
 
       def test_type(test)
         case test # order is important since ErroredTest < FailedTest
-        when Report::ErroredTest; "Error"
-        when Report::FailedTest;  "Failure"
+        when ErroredTest; "Error"
+        when FailedTest;  "Failure"
         end
       end
   end
