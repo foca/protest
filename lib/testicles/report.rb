@@ -1,11 +1,5 @@
 module Testicles
   class Report
-    # Seconds taken to run the test suite.
-    #
-    # TODO: this doesn't belong here, it's being set from within the test
-    # runner. But we need the value here.
-    attr_accessor :time_elapsed
-
     # Define an event handler for your report. The different events fired in a
     # report's life cycle are:
     #
@@ -38,6 +32,10 @@ module Testicles
 
         block.call(self, *args)
       end
+    end
+
+    on :start do |report|
+      report.instance_eval { @started_at = Time.now }
     end
 
     on :pass do |report, passed_test|
@@ -117,6 +115,11 @@ module Testicles
     # Amount ot tests run (whether passed, pending, failed, or errored.)
     def total_tests
       passes.size + failures.size + errors.size + pendings.size
+    end
+
+    # Seconds taken since the test suite started running
+    def time_elapsed
+      Time.now - @started_at
     end
 
     # Encapsulate the relevant information for a test that passed.
