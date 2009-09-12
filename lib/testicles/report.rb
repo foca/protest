@@ -6,6 +6,8 @@ module Testicles
     # :start::     Fired by the runner when starting the whole test suite.
     # :enter::     Fired by the runner when starting a particular test case. It
     #              will get the test case as an argument.
+    # :test::      Fired by a test before it starts running. It will get the
+    #              instance of TestCase for the given test as an argument.
     # :assertion:: Fired by a test each time an assertion is run.
     # :pass::      Fired by a test after it runs successfully without errors.
     #              It will get an instance of PassedTest as an argument.

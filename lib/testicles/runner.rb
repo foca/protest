@@ -23,6 +23,7 @@ module Testicles
     # of the test as an argument. You can avoid reporting a passed test by
     # passing +false+ as a second argument.
     def report(test, report_success=true)
+      @report.on_test(Test.new(test)) if @report.respond_to?(:on_test)
       yield
       @report.on_pass(PassedTest.new(test)) if report_success
     rescue Pending => e
