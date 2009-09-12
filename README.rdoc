@@ -125,6 +125,14 @@ Or you can call the +pending+ method from inside your test.
       end
     end
 
+== Get it
+
+    gem install testicles
+
+Or
+
+    rip install git://github.com/foca/testicles.git
+
 == (Best|Worst) name ever
 
 I personally believe the name is full of win. But I understand it's not the
