@@ -8,6 +8,9 @@ module Testicles
   # which also contains the first 3 lines of the backtrace for each.
   class Reports::Progress < Report
     include Summaries
+    include ColorfulOutput
+
+    attr_reader :stream #:nodoc:
 
     # Set the stream where the report will be written to. STDOUT by default.
     def initialize(stream=STDOUT)
@@ -23,27 +26,19 @@ module Testicles
     end
 
     on :pass do |report, pass|
-      report.print "."
+      report.print ".", :passed
     end
 
     on :pending do |report, pending|
-      report.print "P"
+      report.print "P", :pending
     end
 
     on :failure do |report, failure|
-      report.print "F"
+      report.print "F", :failed
     end
 
     on :error do |report, error|
-      report.print "E"
-    end
-
-    def print(*args) #:nodoc:
-      @stream.print(*args)
-    end
-
-    def puts(*args) #:nodoc:
-      @stream.puts(*args)
+      report.print "E", :errored
     end
   end
 
