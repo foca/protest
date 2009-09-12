@@ -1,23 +1,19 @@
 module Testicles
   class TestCase
-    class << self
-      # Fancy name for your test case, reports can use this to give nice,
-      # descriptive output when running your tests.
-      attr_accessor :description
-    end
-
     # Run all tests in this context. Takes a Report instance in order to
     # provide output.
     def self.run(result)
       tests.each {|test| test.run(result) }
     end
 
-    # Add a test to be run in this context.
+    # Add a test to be run in this context. This method is aliased as +it+ and
+    # +should+ for your comfort.
     def self.test(name, &block)
       tests << new(name, &block)
     end
 
-    # Add a setup block to be run before each test in this context.
+    # Add a setup block to be run before each test in this context. This method
+    # is aliased as +before+ for your comfort.
     def self.setup(&block)
       define_method :setup do
         super
@@ -25,7 +21,8 @@ module Testicles
       end
     end
 
-    # Add a teardown block to be run after each test in this context.
+    # Add a teardown block to be run after each test in this context. This
+    # method is aliased as +after+ for your comfort.
     def self.teardown(&block)
       define_method :teardown do
         instance_eval(&block)
@@ -35,12 +32,28 @@ module Testicles
 
     # Define a new test context nested under the current one. All +setup+ and
     # +teardown+ blocks defined on the current context will be inherited by the
-    # new context.
+    # new context. This method is aliased as +describe+ for your comfort.
     def self.context(description, &block)
       subclass = Class.new(self)
       subclass.class_eval(&block) if block
       subclass.description = "#{self.description} #{description}".strip
       const_set(sanitize_description(description), subclass)
+    end
+
+    class << self
+      # Fancy name for your test case, reports can use this to give nice,
+      # descriptive output when running your tests.
+      attr_accessor :description
+
+      alias_method :describe, :context
+      alias_method :story,    :context
+
+      alias_method :before,   :setup
+      alias_method :after,    :teardown
+
+      alias_method :it,       :test
+      alias_method :should,   :test
+      alias_method :scenario, :test
     end
 
     # Initialize a new instance of a single test. This test can be run in
