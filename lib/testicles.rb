@@ -74,6 +74,7 @@ require "testicles/runner"
 require "testicles/report"
 require "testicles/reports"
 require "testicles/reports/progress"
+require "testicles/reports/documentation"
 
 at_exit do
   Testicles.run_all_tests! if Testicles.autorun?
