@@ -141,7 +141,7 @@ module Testicles
     def run(runner)
       @runner = runner
 
-      runner.report(name) do
+      runner.report(self) do
         pending if test.nil?
 
         setup
@@ -163,6 +163,11 @@ module Testicles
       raise Pending, message
     end
 
+    # Name of the test
+    def name
+      @name
+    end
+
     private
 
     def setup #:nodoc:
@@ -173,10 +178,6 @@ module Testicles
 
     def test
       @test
-    end
-
-    def name
-      @name
     end
 
     def self.tests

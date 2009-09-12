@@ -22,15 +22,15 @@ module Testicles
     # Run a test and report if it passes, fails, or is pending. Takes the name
     # of the test as an argument. You can avoid reporting a passed test by
     # passing +false+ as a second argument.
-    def report(name, report_success=true)
+    def report(test, report_success=true)
       yield
-      @report.on_pass(PassedTest.new(name)) if report_success
+      @report.on_pass(PassedTest.new(test)) if report_success
     rescue Pending => e
-      @report.on_pending(PendingTest.new(name, e))
+      @report.on_pending(PendingTest.new(test, e))
     rescue AssertionFailed => e
-      @report.on_failure(FailedTest.new(name, e))
+      @report.on_failure(FailedTest.new(test, e))
     rescue Exception => e
-      @report.on_error(ErroredTest.new(name, e))
+      @report.on_error(ErroredTest.new(test, e))
     end
 
     def assert(condition, message) #:nodoc:
