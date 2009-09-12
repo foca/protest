@@ -1,5 +1,13 @@
 module Testicles
+  # The +:progress+ report will output a +.+ for each passed test in the suite,
+  # a +P+ for each pending test, an +F+ for each test that failed an assertion,
+  # and an +E+ for each test that raised an unrescued exception.
+  #
+  # At the end of the suite it will output a list of all pending tests, with
+  # files and line numbers, and after that a list of all failures and errors,
+  # which also contains the first 3 lines of the backtrace for each.
   class Reports::Progress < Report
+    # Set the stream where the report will be written to. STDOUT by default.
     def initialize(stream=STDOUT)
       @stream = stream
     end
@@ -34,7 +42,7 @@ module Testicles
     private
 
       def running_time
-        "Ran in #{@time_elapsed} seconds"
+        "Ran in #{time_elapsed} seconds"
       end
 
       def report_pending_tests
@@ -43,8 +51,8 @@ module Testicles
 
         pad_indexes = pendings.size.to_s.size
         pendings.each_with_index do |pending, index|
-          puts "  #{pad(index+1, pad_indexes)}) #{pending.message}"
-          puts indent("on line #{pending.line} of `#{pending.file}'", 6 + pad_indexes)
+          puts "  #{pad(index+1, pad_indexes)}) #{pending.test_name} (#{pending.pending_message})"
+          puts indent("On line #{pending.line} of `#{pending.file}'", 6 + pad_indexes)
           puts
         end
       end
@@ -55,7 +63,8 @@ module Testicles
 
         pad_indexes = failures_and_errors.size.to_s.size
         failures_and_errors.each_with_index do |error, index|
-          puts "  #{pad(index+1, pad_indexes)}) #{error.type}: `#{error.message}' (on line #{error.line} of `#{error.file}')"
+          puts "  #{pad(index+1, pad_indexes)}) #{test_type(error)}: `#{error.test_name}' (on line #{error.line} of `#{error.file}')"
+          puts indent("With `#{error.error_message}'", 6 + pad_indexes)
           puts indent(error.backtrace[0..2].join("\n"), 6 + pad_indexes)
           puts
         end
@@ -80,6 +89,13 @@ module Testicles
 
       def pad(str, amount)
         " " * (amount - str.to_s.size) + str.to_s
+      end
+
+      def test_type(test)
+        case test # order is important since ErroredTest < FailedTest
+        when ErroredTest; "Error"
+        when FailedTest;  "Failure"
+        end
       end
 
       def print(*args)

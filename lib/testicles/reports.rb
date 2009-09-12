@@ -1,2 +1,2 @@
-module Testicles::Reports
+module Testicles::Reports # :nodoc:
 end

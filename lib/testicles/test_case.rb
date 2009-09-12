@@ -1,17 +1,23 @@
 module Testicles
   class TestCase
     class << self
+      # Fancy name for your test case, reports can use this to give nice,
+      # descriptive output when running your tests.
       attr_accessor :description
     end
 
+    # Run all tests in this context. Takes a Report instance in order to
+    # provide output.
     def self.run(result)
       tests.each {|test| test.run(result) }
     end
 
+    # Add a test to be run in this context.
     def self.test(name, &block)
       tests << new(name, &block)
     end
 
+    # Add a setup block to be run before each test in this context.
     def self.setup(&block)
       define_method :setup do
         super
@@ -19,6 +25,7 @@ module Testicles
       end
     end
 
+    # Add a teardown block to be run after each test in this context.
     def self.teardown(&block)
       define_method :teardown do
         instance_eval(&block)
@@ -26,6 +33,9 @@ module Testicles
       end
     end
 
+    # Define a new test context nested under the current one. All +setup+ and
+    # +teardown+ blocks defined on the current context will be inherited by the
+    # new context.
     def self.context(description, &block)
       subclass = Class.new(self)
       subclass.class_eval(&block) if block
@@ -33,13 +43,20 @@ module Testicles
       const_set(sanitize_description(description), subclass)
     end
 
-    attr_reader :test, :name
-
+    # Initialize a new instance of a single test. This test can be run in
+    # isolation by calling TestCase#run.
     def initialize(name, &block)
       @test = block
       @name = name
     end
 
+    # Run a test in isolation. Any +setup+ and +teardown+ blocks defined for
+    # this test case will be run as expected.
+    #
+    # You need to provide a Report instance to handle errors/pending tests/etc.
+    #
+    # If the test's block is nil, then the test will be marked as pending and
+    # nothing will be run.
     def run(result)
       @result = result
 
@@ -52,19 +69,34 @@ module Testicles
       end
     end
 
-    def assert(condition, message="Expected condition to be satisfied, but wasn't")
+    # Ensure a condition is met. This will raise AssertionFailed if the
+    # condition isn't met. You can override the default failure message
+    # by passing it as an argument.
+    def assert(condition, message="Expected condition to be satisfied")
       @result.on_assertion
       raise AssertionFailed, message unless condition
     end
 
-    def setup
-    end
-
-    def teardown
-    end
-
-    def pending(message=name)
+    # Make the test be ignored as pending. You can override the default message
+    # that will be sent to the report by passing it as an argument.
+    def pending(message="Not Yet Implemented")
       raise Pending, message
+    end
+
+    private
+
+    def setup #:nodoc:
+    end
+
+    def teardown #:nodoc:
+    end
+
+    def test
+      @test
+    end
+
+    def name
+      @name
     end
 
     def self.tests
