@@ -3,7 +3,9 @@ module Testicles
     # Run all tests in this context. Takes a Report instance in order to
     # provide output.
     def self.run(result)
+      result.report("#{description} global setup", false) { do_global_setup }
       tests.each {|test| test.run(result) }
+      result.report("#{description} global teardown", false) { do_global_teardown }
     end
 
     # Add a test to be run in this context. This method is aliased as +it+ and
@@ -21,6 +23,29 @@ module Testicles
       end
     end
 
+    # Add a +setup+ block that will be run *once* for the entire test case,
+    # before the first test is run.
+    #
+    # Keep in mind that while +setup+ blocks are evaluated on the context of the
+    # test, and thus you can share state between them, your tests will not be
+    # able to access instance variables set in a +global_setup+ block.
+    #
+    # This is usually not needed (and generally using it is a code smell, since
+    # you could make a test dependent on the state of other tests, which is a
+    # huge problem), but it comes in handy when you need to do expensive
+    # operations in your test setup/teardown and the tests won't modify the
+    # state set on this operations. For example, creating large amount of
+    # records in a database or filesystem, when your tests will only read these
+    # records.
+    def self.global_setup(&block)
+      (class << self; self; end).class_eval do
+        define_method :do_global_setup do
+          super
+          instance_eval(&block)
+        end
+      end
+    end
+
     # Add a teardown block to be run after each test in this context. This
     # method is aliased as +after+ for your comfort.
     def self.teardown(&block)
@@ -29,6 +54,26 @@ module Testicles
         super
       end
     end
+
+    # Add a +teardown+ block that will be run *once* for the entire test case,
+    # after the last test is run.
+    #
+    # Keep in mind that while +teardown+ blocks are evaluated on the context of
+    # the test, and thus you can share state between the tests and the
+    # teardown blocks, you will not be able to access instance variables set in
+    # a test from your +global_teardown+ block.
+    #
+    # See TestCase.global_setup for a discussion on why these methods are best
+    # avoided unless you really need them and use them carefully.
+    def self.global_teardown(&block)
+      (class << self; self; end).class_eval do
+        define_method :do_global_teardown do
+          instance_eval(&block)
+          super
+        end
+      end
+    end
+
 
     # Define a new test context nested under the current one. All +setup+ and
     # +teardown+ blocks defined on the current context will be inherited by the
@@ -45,15 +90,18 @@ module Testicles
       # descriptive output when running your tests.
       attr_accessor :description
 
-      alias_method :describe, :context
-      alias_method :story,    :context
+      alias_method :describe,   :context
+      alias_method :story,      :context
 
-      alias_method :before,   :setup
-      alias_method :after,    :teardown
+      alias_method :before,     :setup
+      alias_method :after,      :teardown
 
-      alias_method :it,       :test
-      alias_method :should,   :test
-      alias_method :scenario, :test
+      alias_method :before_all, :global_setup
+      alias_method :after_all,  :global_setup
+
+      alias_method :it,         :test
+      alias_method :should,     :test
+      alias_method :scenario,   :test
     end
 
     # Initialize a new instance of a single test. This test can be run in
@@ -121,6 +169,14 @@ module Testicles
       "Test#{description.gsub(/\W+/, ' ').strip.gsub(/(^| )(\w)/) { $2.upcase }}".to_sym
     end
     private_class_method :sanitize_description
+
+    def self.do_global_setup
+    end
+    private_class_method :do_global_setup
+
+    def self.do_global_teardown
+    end
+    private_class_method :do_global_teardown
 
     def self.inherited(child)
       Testicles.add_test_case(child)

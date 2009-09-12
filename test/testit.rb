@@ -1,11 +1,29 @@
 require "testicles"
 
 class A < Testicles::TestCase
+  global_setup do
+    @falafel ||= 0
+    @falafel += 1
+  end
+
+  global_teardown do
+    raise Testicles::AssertionFailed, "@falafel isn't 1" unless @falafel == 1
+  end
+
   setup do
     @foo = 1
   end
 
   context "nested contexts" do
+    global_setup do
+      @falafel += 1
+    end
+
+    global_teardown do
+      raise Testicles::AssertionFailed, "@falafel isn't 2" unless @falafel == 2
+      @falafel -= 1
+    end
+
     setup do
       @bar = 2
     end
