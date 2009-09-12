@@ -1,6 +1,7 @@
 module Testicles
-  # Encapsulate the relevant information for a test that passed.
-  class PassedTest
+  # Encapsulates the relevant information about a test. Useful for certain
+  # reports.
+  class Test
     # Name of the test that passed. Useful for certain reports.
     attr_reader :test_name
 
@@ -9,14 +10,9 @@ module Testicles
     end
   end
 
-  # Encapsulates the relevant information for a test which failed an
-  # assertion.
-  class FailedTest < PassedTest
-    def initialize(test_name, error) #:nodoc:
-      super(test_name)
-      @error = error
-    end
-
+  # Mixin for tests that had an error (this could be either a failed assertion,
+  # unrescued exceptions, or just a pending tests.)
+  module TestWithErrors
     # Message with which it failed the assertion
     def error_message
       @error.message
@@ -38,15 +34,43 @@ module Testicles
     end
   end
 
+  # Encapsulate the relevant information for a test that passed.
+  class PassedTest < Test
+  end
+
+  # Encapsulates the relevant information for a test which failed an
+  # assertion.
+  class FailedTest < Test
+    include TestWithErrors
+
+    def initialize(test_name, error) #:nodoc:
+      super(test_name)
+      @error = error
+    end
+  end
+
   # Encapsulates the relevant information for a test which raised an
   # unrescued exception.
-  class ErroredTest < FailedTest
+  class ErroredTest < Test
+    include TestWithErrors
+
+    def initialize(test_name, error) #:nodoc:
+      super(test_name)
+      @error = error
+    end
   end
 
   # Encapsulates the relevant information for a test that the user marked as
   # pending.
-  class PendingTest < FailedTest
+  class PendingTest < Test
+    include TestWithErrors
+
     # Message passed to TestCase#pending, if any.
     alias_method :pending_message, :error_message
+
+    def initialize(test_name, error) #:nodoc:
+      super(test_name)
+      @error = error
+    end
   end
 end
