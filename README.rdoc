@@ -57,8 +57,23 @@ If you need to run code before or after each test, declare a +setup+ or
       end
     end
 
-*TODO*: Implement +global_setup+ and +global_teardown+ (analogous to
-<tt>before(:all)</tt> and <tt>after(:all)</tt> in rspec.)
++setup+ and +teardown+ blocks are evaluated in the same context as your test,
+which means any instance variables defined in any of them are available in the
+rest.
+
+You can also use +global_setup+ and +global_teardown+ to run code only once per
+test case. +global_setup+ blocks will run once before the first test is run, and
++global_teardown+ will run after all the tests have been run.
+
+These methods, however, are dangerous, and should be used with caution, as
+they might introduce dependencies between your tests if you don't write
+your tests properly. Make sure that any state modified by code run in a
++global_setup+ or +global_teardown+ isn't changed in any of your tests.
+
+Also, you should be aware that the code of +global_setup+ and +global_teardown+
+blocks isn't evaluated in the same context as your tests and normal
++setup+/+teardown+ blocks are, so you can't share instance variables between
+them.
 
 == Nested contexts
 
