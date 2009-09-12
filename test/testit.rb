@@ -1,6 +1,6 @@
 require "testicles"
 
-class A < Testicles::TestCase
+Testicles.context("A few tests") do
   global_setup do
     @falafel ||= 0
     @falafel += 1

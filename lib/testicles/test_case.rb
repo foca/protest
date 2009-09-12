@@ -1,4 +1,24 @@
 module Testicles
+  # Define a top level test context where to define tests. This works exactly
+  # the same as subclassing TestCase explicitly.
+  #
+  #     Testicles.context "A user" do
+  #       ...
+  #     end
+  #
+  # is just syntax sugar to write:
+  #
+  #     class TestUser < Testicles::TestCase
+  #       self.description = "A user"
+  #       ...
+  #     end
+  def self.context(description, &block)
+    TestCase.context(description, &block)
+  end
+
+  # A TestCase defines a suite of related tests. You can further categorize
+  # your tests by declaring nested contexts inside the class. See
+  # TestCase.context.
   class TestCase
     # Run all tests in this context. Takes a Report instance in order to
     # provide output.
