@@ -4,6 +4,8 @@ rescue LoadError
   require "rake/rdoctask"
 end
 
+require "rake/testtask"
+
 Rake::RDocTask.new do |rd|
   rd.main = "README.rdoc"
   rd.title = "API Documentation for Testicles"
@@ -16,3 +18,7 @@ begin
   MG.new("testicles.gemspec")
 rescue LoadError
 end
+
+Rake::TestTask.new
+
+task :default => :test
