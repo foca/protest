@@ -1,18 +1,6 @@
 require "test_helper"
 
 Testicles.describe("A test case") do
-  def mock_test_case(&block)
-    test_case = Testicles.describe(name, &block)
-    test_case.description = ""
-    nested_contexts = Testicles.send(:available_test_cases).select {|t| t < test_case }
-
-    report = silent_report
-    [test_case, *nested_contexts].each do |test_case|
-      test_case.run(Testicles::Runner.new(report))
-    end
-    report
-  end
-
   it "records the number of assertions run" do
     report = mock_test_case do
       test "I have 2 assertions" do
