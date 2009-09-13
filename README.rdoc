@@ -2,7 +2,7 @@
 
     require "testicles"
 
-    class UserTest < Testicles::TestCase
+    Testicles.context("A user") do
       setup do
         @user = User.new(:name => "John Doe", :email => "john@example.org")
       end
@@ -26,15 +26,15 @@ Testicles.
 
 == Assertions
 
-You probably wonder why the example doesn't have any assertion other than
-+assert+. Why not +assert_equal+, right? Well, the idea is to keep it slim. If
+You probably wonder why the above example doesn't have any assertion other than
++assert+. Where's +assert_equal+, right? Well, the idea is to keep it slim. If
 you want to use more assertions, you're free to define your own. Also, since it
 uses the same assertion API as Test::Unit, you can just require its assertions:
 
     require "testicles"
     require "test/unit/assertions"
 
-    class UserTest < Testicles::TestCase
+    Testicles.context("A user") do
       include Test::Unit::Assertions
 
       # now you can use all of Test::Unit assertions. For free.
@@ -47,7 +47,7 @@ You can even define rspec-like matchers if you want.
 If you need to run code before or after each test, declare a +setup+ or
 +teardown+ block (respectively.)
 
-    class UserTest < Testicles::TestCase
+    Testicles.context("A user") do
       setup do # this runs before each test
         @user = User.create(:name => "John")
       end
@@ -79,12 +79,12 @@ them.
 
 Break down your test into logical chunks with nested contexts:
 
-    class UserTest < Testicles::TestCase
+    Testicles.context("A user") do
       setup do
         @user = User.make
       end
 
-      context "validations" do
+      context "when validating" do
         test "validates name" do
           @user.name = nil
           assert !@user.valid?
@@ -93,7 +93,7 @@ Break down your test into logical chunks with nested contexts:
         # etc, etc
       end
 
-      context "something else" do
+      context "doing something else" do
         # your get the idea
       end
     end
@@ -106,7 +106,7 @@ context and in _any_ other context nested in it.
 There are two ways of marking a test as pending. You can declare a test with no
 body:
 
-    class SomeTest < Testicles::TestCase
+    Testicles.context("Some tests") do
       test "this test will be marked as pending"
 
       test "this tests is also pending"
@@ -118,12 +118,65 @@ body:
 
 Or you can call the +pending+ method from inside your test.
 
-    class SomeTest < Testicles::TestCase
+    Testicles.context("Some tests") do
       test "this test is pending" do
         pending "oops, this doesn't work"
         assert false
       end
     end
+
+== Reports
+
+Testicles can report the output of a test suite in many ways. The library ships
+with a +:progress+ report, and a +:documentation+ report, +:progress+ being the
+default.
+
+=== Progress report
+
+Use this report by calling <tt>Testicles.report_with(:progress)</tt> (this isn't
+needed though, since this is the default report.)
+
+The progress report will output the "classic" Test::Unit output of periods for
+passing tests, "F" for failing assertions, "E" for unrescued exceptions, and 
+"P" for pending tests, in full color.
+
+=== Documentation report
+
+Use this report by calling <tt>Testicles.report_with(:documentation)</tt>
+
+For each testcase in your suite, this will output the description of the test
+case (whatever you provide TestCase.context), followed by the name of each test
+in that context, one per line. For example:
+
+    Testicles.context "A user" do
+      test "has a name"
+      test "has an email"
+
+      context "validations" do
+        test "ensure the email can't be blank"
+      end
+    end
+
+Will output, when run with the +:documentation+ report:
+
+    A user
+    - has a name (Not Yet Implemented)
+    - has an email (Not Yet Implemented)
+
+    A user validations
+    - ensure the email can't be blank (Not Yet Implemented)
+
+(The 'Not Yet Implemented' messages are because the tests have no body. See
+"Pending tests", above.)
+
+This is similar to the specdoc runner in rspec[http://rspec.info].
+
+=== Defining your own reports
+
+This is really, really easy. All you need to do is subclass Report, and
+register your subclass by calling +Testicles.add_report+. See the
+documentation for details, or take a look at the source code for
+Testicles::Reports::Progress and Testicles::Reports::Documentation.
 
 == Get it
 
