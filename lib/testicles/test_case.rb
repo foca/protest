@@ -16,6 +16,11 @@ module Testicles
     TestCase.context(description, &block)
   end
 
+  class << self
+    alias_method :describe,   :context
+    alias_method :story,      :context
+  end
+
   # A TestCase defines a suite of related tests. You can further categorize
   # your tests by declaring nested contexts inside the class. See
   # TestCase.context.
