@@ -1,7 +1,7 @@
 module Testicles
   class Reports::Documentation < Report
-    include Summaries
-    include ColorfulOutput
+    include Utils::Summaries
+    include Utils::ColorfulOutput
 
     attr_reader :stream #:nodoc:
 

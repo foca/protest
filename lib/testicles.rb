@@ -69,6 +69,9 @@ module Testicles
   private_class_method :available_reports
 end
 
+require "testicles/utils"
+require "testicles/utils/summaries"
+require "testicles/utils/colorful_output"
 require "testicles/test_case"
 require "testicles/tests"
 require "testicles/runner"

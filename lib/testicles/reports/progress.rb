@@ -7,8 +7,8 @@ module Testicles
   # files and line numbers, and after that a list of all failures and errors,
   # which also contains the first 3 lines of the backtrace for each.
   class Reports::Progress < Report
-    include Summaries
-    include ColorfulOutput
+    include Utils::Summaries
+    include Utils::ColorfulOutput
 
     attr_reader :stream #:nodoc:
 

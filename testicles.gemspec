@@ -22,10 +22,15 @@ README.rdoc
 Rakefile
 testicles.gemspec
 lib/testicles.rb
+lib/testicles/utils.rb
+lib/testicles/utils/summaries.rb
+lib/testicles/utils/colorful_output.rb
 lib/testicles/test_case.rb
+lib/testicles/tests.rb
 lib/testicles/runner.rb
 lib/testicles/report.rb
 lib/testicles/reports.rb
 lib/testicles/reports/progress.rb
+lib/testicles/reports/documentation.rb
 ]
 end
