@@ -24,6 +24,14 @@ I believe in minimalistic software, which is easily understood, easy to test,
 and specially, easy to extend for third parties. That's where I'm aiming with
 Testicles.
 
+== Get it
+
+    gem install testicles
+
+Or
+
+    rip install git://github.com/foca/testicles.git
+
 == Assertions
 
 You probably wonder why the above example doesn't have any assertion other than
@@ -177,14 +185,6 @@ This is really, really easy. All you need to do is subclass Report, and
 register your subclass by calling +Testicles.add_report+. See the
 documentation for details, or take a look at the source code for
 Testicles::Reports::Progress and Testicles::Reports::Documentation.
-
-== Get it
-
-    gem install testicles
-
-Or
-
-    rip install git://github.com/foca/testicles.git
 
 == (Best|Worst) name ever
 
