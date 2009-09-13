@@ -1,5 +1,7 @@
 require "testicles"
 
+Testicles.report_with(:documentation)
+
 module TestHelpers
   class IORecorder
     attr_reader :messages
@@ -20,8 +22,15 @@ module TestHelpers
   def silent_report(type=:progress)
     Testicles.report(type, IORecorder.new)
   end
+
+  module Assertions
+    def assert_equal(expected, actual, message="<#{expected}> expected, but was <#{actual}>")
+      assert(expected == actual, message)
+    end
+  end
 end
 
 class Testicles::TestCase
   include TestHelpers
+  include TestHelpers::Assertions
 end

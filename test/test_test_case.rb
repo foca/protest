@@ -1,12 +1,15 @@
 require "test_helper"
 
-Testicles.report_with(:documentation)
-
 Testicles.describe("A test case") do
   def mock_test_case(&block)
-    report = silent_report
     test_case = Testicles.describe(name, &block)
-    test_case.run(Testicles::Runner.new(report))
+    test_case.description = ""
+    nested_contexts = Testicles.send(:available_test_cases).select {|t| t < test_case }
+
+    report = silent_report
+    [test_case, *nested_contexts].each do |test_case|
+      test_case.run(Testicles::Runner.new(report))
+    end
     report
   end
 
@@ -126,9 +129,37 @@ Testicles.describe("A test case") do
     assert_equal 2, report.total_tests
   end
 
-  protected
-
-    def assert_equal(expected, actual, message="<#{expected}> expected, but was <#{actual}>")
-      assert(expected == actual, message)
+  it "correctly sets the description of a nested context to include the description of the parent" do
+    report = mock_test_case do
+      context "A parent context" do
+        context "has a child context" do
+          test "success!" do
+            assert true
+          end
+        end
+      end
     end
+
+    test_case = report.passes.first.test.class
+    assert_equal "A parent context has a child context", test_case.description
+  end
+
+  it "inherits setup/teardown blocks from the outside context" do
+    report = mock_test_case do
+      context "A parent context" do
+        setup do
+          @foo = 1
+        end
+
+        context "has a child context" do
+          test "success!" do
+            assert @foo == 1
+          end
+        end
+      end
+    end
+
+    assert_equal 1, report.passes.size
+    assert_equal 1, report.total_tests
+  end
 end
