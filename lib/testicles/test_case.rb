@@ -162,6 +162,12 @@ module Testicles
       @runner.assert(condition, message)
     end
 
+    # Provided for Test::Unit compatibility, this lets you include
+    # Test::Unit::Assertions and everything works seamlessly.
+    def assert_block(message="Expected condition to be satisified") #:nodoc:
+      assert(yield, message)
+    end
+
     # Make the test be ignored as pending. You can override the default message
     # that will be sent to the report by passing it as an argument.
     def pending(message="Not Yet Implemented")

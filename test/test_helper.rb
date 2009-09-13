@@ -1,4 +1,5 @@
 require "testicles"
+require "test/unit/assertions"
 
 Testicles.report_with(:documentation)
 
@@ -34,15 +35,9 @@ module TestHelpers
     end
     report
   end
-
-  module Assertions
-    def assert_equal(expected, actual, message="<#{expected}> expected, but was <#{actual}>")
-      assert(expected == actual, message)
-    end
-  end
 end
 
 class Testicles::TestCase
   include TestHelpers
-  include TestHelpers::Assertions
+  include Test::Unit::Assertions
 end

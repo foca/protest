@@ -36,21 +36,17 @@ Or
 
 You probably wonder why the above example doesn't have any assertion other than
 +assert+. Where's +assert_equal+, right? Well, the idea is to keep it slim. If
-you want to use more assertions, you're free to define your own. All you need
-to do is call <tt>TestCase#assert</tt> somewhere in your assertion. For example:
+you want to use more assertions, you're free to define your own. You can also
+use all the assertions provided by Test::Unit, by just including them:
 
-    module CustomAssertions
-      def assert_equal(expected, actual, message="expected != actual")
-        assert(expected == actual, message)
-      end
-    end
+    require "test/unit/assertions"
 
     class Testicles::TestCase
-      include CustomAssertions
+      include Test::Unit::Assertions
     end
 
-You can even define rspec-like matchers if you want. See +matchers.rb+ in the
-examples directory for an example.
+You could also define rspec-like matchers if you like that. See +matchers.rb+ in
+the examples directory for an example.
 
 == Setup and teardown
 

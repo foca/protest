@@ -12,6 +12,25 @@ Testicles.describe("A test case") do
     assert_equal 2, report.assertions
   end
 
+  it "allows including assertions from Test::Unit" do
+    report = mock_test_case do
+      include Test::Unit::Assertions
+
+      test "a Test::Unit assertion that passes, makes the test pass" do
+        assert_match /foo/, "foobar"
+      end
+
+      test "a Test::Unit assertion that fails makes the test fail, not error" do
+        assert_in_delta 1.0, 2.0, 0.5
+      end
+    end
+
+    assert_equal 1, report.passes.size
+    assert_equal 1, report.failures.size
+    assert_equal 0, report.errors.size
+    assert_equal 2, report.total_tests
+  end
+
   it "passes if no assertion fails or an exception is raised" do
     report = mock_test_case do
       test "Passing test" do
