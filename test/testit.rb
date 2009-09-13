@@ -14,7 +14,7 @@ Testicles.context("A few tests") do
     @foo = 1
   end
 
-  context "nested contexts" do
+  context "in nested contexts" do
     global_setup do
       @falafel += 1
     end

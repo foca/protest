@@ -106,7 +106,7 @@ module Testicles
     def self.context(description, &block)
       subclass = Class.new(self)
       subclass.class_eval(&block) if block
-      subclass.description = "#{self.description} #{description}".strip
+      subclass.description = description
       const_set(sanitize_description(description), subclass)
     end
 
@@ -202,6 +202,10 @@ module Testicles
     def self.do_global_teardown
     end
     private_class_method :do_global_teardown
+
+    def self.description #:nodoc:
+      "#{ancestors[1].description rescue nil} #{@description}".strip
+    end
 
     def self.inherited(child)
       Testicles.add_test_case(child)
