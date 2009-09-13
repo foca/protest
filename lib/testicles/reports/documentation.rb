@@ -1,4 +1,34 @@
 module Testicles
+  # For each testcase in your suite, this will output the description of the test
+  # case (whatever you provide TestCase.context), followed by the name of each test
+  # in that context, one per line. For example:
+  #
+  #     Testicles.context "A user" do
+  #       test "has a name" do
+  #         ...
+  #       end
+  #
+  #       test "has an email" do
+  #         ...
+  #       end
+  #
+  #       context "validations" do
+  #         test "ensure the email can't be blank" do
+  #           ...
+  #         end
+  #       end
+  #     end
+  #
+  # Will output, when run with the +:documentation+ report:
+  #
+  #     A user
+  #     - has a name
+  #     - has an email
+  #
+  #     A user validations
+  #     - ensure the email can't be blank
+  #
+  # This is based on the specdoc runner in rspec[http://rspec.info].
   class Reports::Documentation < Report
     include Utils::Summaries
     include Utils::ColorfulOutput
