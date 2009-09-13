@@ -30,7 +30,7 @@ Testicles.
 
 Or
 
-    rip install git://github.com/foca/testicles.git
+    rip install git://github.com/foca/testicles.git v0.2
 
 == Assertions
 

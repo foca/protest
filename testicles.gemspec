@@ -1,7 +1,7 @@
 Gem::Specification.new do |s|
   s.name    = "testicles"
-  s.version = "0.1"
-  s.date    = "2009-09-11"
+  s.version = "0.2"
+  s.date    = "2009-09-13"
 
   s.description = "Testicles is a tiny, simple, and easy-to-extend test framework"
   s.summary     = s.description
@@ -32,5 +32,9 @@ lib/testicles/report.rb
 lib/testicles/reports.rb
 lib/testicles/reports/progress.rb
 lib/testicles/reports/documentation.rb
+examples/matchers.rb
+examples/progress_report.rb
+test/test_helper.rb
+test/test_test_case.rb
 ]
 end
