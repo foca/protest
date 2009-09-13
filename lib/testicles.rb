@@ -43,20 +43,25 @@ module Testicles
   #
   # See Testicles.add_test_case and Testicles.report_with
   def self.run_all_tests!(*report_args)
-    report = available_reports.fetch(@report).new(*report_args)
-    Runner.new(report).run(*available_test_cases)
+    Runner.new(@report).run(*available_test_cases)
   end
 
   # Select the name of the Report to use when running tests. See
   # Testicles.add_report for more information on registering a report.
   #
+  # Any extra arguments will be forwarded to the report's #initialize method.
+  #
   # The default report is Testicles::Reports::Progress
-  def self.report_with(name)
-    @report = name
+  def self.report_with(name, *report_args)
+    @report = report(name, *report_args)
   end
 
-  self.autorun = true
-  self.report_with(:progress)
+  # Load a report by name, initializing it with the extra arguments provided.
+  # If the given +name+ doesn't match a report registered via
+  # Testicles.add_report then the method will raise IndexError.
+  def self.report(name, *report_args)
+    available_reports.fetch(name).new(*report_args)
+  end
 
   def self.available_test_cases
     @test_cases ||= []
@@ -79,6 +84,9 @@ require "testicles/report"
 require "testicles/reports"
 require "testicles/reports/progress"
 require "testicles/reports/documentation"
+
+Testicles.autorun = true
+Testicles.report_with(:progress)
 
 at_exit do
   Testicles.run_all_tests! if Testicles.autorun?
