@@ -41,7 +41,7 @@ module Testicles
     end
 
     on :enter do |report, context|
-      report.puts context.description
+      report.puts context.description unless context.tests.empty?
     end
 
     on :pass do |report, passed_test|
@@ -62,8 +62,8 @@ module Testicles
       report.puts "- #{pending_test.test_name} (#{pending_test.pending_message})", :pending
     end
 
-    on :exit do |report, test_case|
-      report.puts
+    on :exit do |report, context|
+      report.puts unless context.tests.empty?
     end
 
     on :end do |report|

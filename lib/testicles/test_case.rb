@@ -33,6 +33,11 @@ module Testicles
       result.report("#{description} global teardown", false) { do_global_teardown }
     end
 
+    # Tests added to this context.
+    def self.tests
+      @tests ||= []
+    end
+
     # Add a test to be run in this context. This method is aliased as +it+ and
     # +should+ for your comfort.
     def self.test(name, &block)
@@ -190,11 +195,6 @@ module Testicles
     def test
       @test
     end
-
-    def self.tests
-      @tests ||= []
-    end
-    private_class_method :tests
 
     def self.sanitize_description(description)
       "Test#{description.gsub(/\W+/, ' ').strip.gsub(/(^| )(\w)/) { $2.upcase }}".to_sym
