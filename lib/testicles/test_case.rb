@@ -210,7 +210,8 @@ module Testicles
     private_class_method :do_global_teardown
 
     def self.description #:nodoc:
-      "#{ancestors[1].description rescue nil} #{@description}".strip
+      parent = ancestors[1..-1].detect {|a| a < Testicles::TestCase }
+      "#{parent.description rescue nil} #{@description}".strip
     end
 
     def self.inherited(child)

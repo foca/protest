@@ -136,19 +136,40 @@ Testicles.describe("A test case") do
     assert_equal 2, report.total_tests
   end
 
-  it "correctly sets the description of a nested context to include the description of the parent" do
-    report = mock_test_case do
-      context "A parent context" do
-        context "has a child context" do
-          test "success!" do
-            assert true
+  context "setting the description of a nested context" do
+    it "includes the description of the parent" do
+      report = mock_test_case do
+        context "A parent context" do
+          context "has a child context" do
+            test "success!" do
+              assert true
+            end
           end
         end
       end
+
+      test_case = report.passes.first.test.class
+      assert_equal "A parent context has a child context", test_case.description
     end
 
-    test_case = report.passes.first.test.class
-    assert_equal "A parent context has a child context", test_case.description
+    it "includes the description of the parent, even if you inject modules into the ancestors chain" do
+      report = mock_test_case do
+        module M; end
+
+        context "A parent context" do
+          context "has a child context" do
+            include M
+
+            test "success!" do
+              assert true
+            end
+          end
+        end
+      end
+
+      test_case = report.passes.first.test.class
+      assert_equal "A parent context has a child context", test_case.description
+    end
   end
 
   it "inherits setup/teardown blocks from the outside context" do
