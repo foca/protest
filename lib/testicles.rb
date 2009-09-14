@@ -75,6 +75,7 @@ module Testicles
 end
 
 require "testicles/utils"
+require "testicles/utils/backtrace_filter"
 require "testicles/utils/summaries"
 require "testicles/utils/colorful_output"
 require "testicles/test_case"

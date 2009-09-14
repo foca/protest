@@ -21,24 +21,30 @@ module Testicles
     # subclass of Exception in the case of an ErroredTest.)
     attr_reader :error
 
-    # Message with which it failed the assertion
+    # Message with which it failed the assertion.
     def error_message
-      @error.message
+      error.message
     end
 
-    # Line of the file where the assertion failed
+    # Line of the file where the assertion failed.
     def line
       backtrace.first.split(":")[1]
     end
 
-    # File where the assertion failed
+    # File where the assertion failed.
     def file
       backtrace.first.split(":")[0]
     end
 
-    # Backtrace of the assertion
+    # Filtered backtrace of the assertion. See Testicles::Utils::BacktraceFilter
+    # for details on the filtering.
     def backtrace
-      @error.backtrace
+      @backtrace ||= Utils::BacktraceFilter.filter(raw_backtrace)
+    end
+
+    # Raw backtrace, as provided by the error.
+    def raw_backtrace
+      error.backtrace
     end
   end
 

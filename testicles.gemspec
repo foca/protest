@@ -23,6 +23,7 @@ Rakefile
 testicles.gemspec
 lib/testicles.rb
 lib/testicles/utils.rb
+lib/testicles/utils/backtrace_filter.rb
 lib/testicles/utils/summaries.rb
 lib/testicles/utils/colorful_output.rb
 lib/testicles/test_case.rb
