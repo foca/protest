@@ -1,6 +1,6 @@
 require "test_helper"
 
-Testicles.describe("A test case") do
+Protest.describe("A test case") do
   it "records the number of assertions run" do
     report = mock_test_case do
       test "I have 2 assertions" do
@@ -14,7 +14,7 @@ Testicles.describe("A test case") do
 
   it "allows including assertions from Test::Unit" do
     report = mock_test_case do
-      include Test::Unit::Assertions
+      include ::Test::Unit::Assertions
 
       test "a Test::Unit assertion that passes, makes the test pass" do
         assert_match /foo/, "foobar"

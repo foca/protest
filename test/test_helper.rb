@@ -1,7 +1,7 @@
-require "testicles"
+require "protest"
 require "test/unit/assertions"
 
-Testicles.report_with(:documentation)
+Protest.report_with(:documentation)
 
 module TestHelpers
   class IORecorder
@@ -21,23 +21,23 @@ module TestHelpers
   end
 
   def silent_report(type=:progress)
-    Testicles.report(type, IORecorder.new)
+    Protest.report(type, IORecorder.new)
   end
 
   def mock_test_case(&block)
-    test_case = Testicles.describe(name, &block)
+    test_case = Protest.describe(name, &block)
     test_case.description = ""
-    nested_contexts = Testicles.send(:available_test_cases).select {|t| t < test_case }
+    nested_contexts = Protest.send(:available_test_cases).select {|t| t < test_case }
 
     report = silent_report
     [test_case, *nested_contexts].each do |test_case|
-      test_case.run(Testicles::Runner.new(report))
+      test_case.run(Protest::Runner.new(report))
     end
     report
   end
 end
 
-class Testicles::TestCase
+class Protest::TestCase
   include TestHelpers
   include Test::Unit::Assertions
 end
