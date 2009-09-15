@@ -1,9 +1,9 @@
-module Testicles
+module Protest
   # For each testcase in your suite, this will output the description of the test
   # case (whatever you provide TestCase.context), followed by the name of each test
   # in that context, one per line. For example:
   #
-  #     Testicles.context "A user" do
+  #     Protest.context "A user" do
   #       test "has a name" do
   #         ...
   #       end

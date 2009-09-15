@@ -1,4 +1,4 @@
-module Testicles
+module Protest
   module Utils
     # Mixin that provides colorful output to your console based reports. This uses
     # bash's escape sequences, so it won't work on windows.

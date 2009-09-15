@@ -1,8 +1,8 @@
-= Testicles, the ballsy test framework
+= Protest, the simplicity rebel test framework
 
-    require "testicles"
+    require "protest"
 
-    Testicles.context("A user") do
+    Protest.context("A user") do
       setup do
         @user = User.new(:name => "John Doe", :email => "john@example.org")
       end
@@ -16,21 +16,21 @@
       end
     end
 
-Testicles is a small, simple, and easy-to-extend testing framework for ruby. It
+Protest is a small, simple, and easy-to-extend testing framework for ruby. It
 was written as a replacement for Test::Unit, given how awful its code is, and
 how difficult it is to extend in order to add new features.
 
 I believe in minimalistic software, which is easily understood, easy to test,
 and specially, easy to extend for third parties. That's where I'm aiming with
-Testicles.
+Protest.
 
 == Get it
 
-    gem install testicles
+    gem install protest
 
 Or
 
-    rip install git://github.com/foca/testicles.git
+    rip install git://github.com/foca/protest.git
 
 == Assertions
 
@@ -41,7 +41,7 @@ use all the assertions provided by Test::Unit, by just including them:
 
     require "test/unit/assertions"
 
-    class Testicles::TestCase
+    class Protest::TestCase
       include Test::Unit::Assertions
     end
 
@@ -53,7 +53,7 @@ the examples directory for an example.
 If you need to run code before or after each test, declare a +setup+ or
 +teardown+ block (respectively.)
 
-    Testicles.context("A user") do
+    Protest.context("A user") do
       setup do # this runs before each test
         @user = User.create(:name => "John")
       end
@@ -85,7 +85,7 @@ them.
 
 Break down your test into logical chunks with nested contexts:
 
-    Testicles.context("A user") do
+    Protest.context("A user") do
       setup do
         @user = User.make
       end
@@ -112,7 +112,7 @@ context and in _any_ other context nested in it.
 There are two ways of marking a test as pending. You can declare a test with no
 body:
 
-    Testicles.context("Some tests") do
+    Protest.context("Some tests") do
       test "this test will be marked as pending"
 
       test "this tests is also pending"
@@ -124,7 +124,7 @@ body:
 
 Or you can call the +pending+ method from inside your test.
 
-    Testicles.context("Some tests") do
+    Protest.context("Some tests") do
       test "this test is pending" do
         pending "oops, this doesn't work"
         assert false
@@ -133,13 +133,13 @@ Or you can call the +pending+ method from inside your test.
 
 == Reports
 
-Testicles can report the output of a test suite in many ways. The library ships
+Protest can report the output of a test suite in many ways. The library ships
 with a +:progress+ report, and a +:documentation+ report, +:progress+ being the
 default.
 
 === Progress report
 
-Use this report by calling <tt>Testicles.report_with(:progress)</tt> (this isn't
+Use this report by calling <tt>Protest.report_with(:progress)</tt> (this isn't
 needed though, since this is the default report.)
 
 The progress report will output the "classic" Test::Unit output of periods for
@@ -148,13 +148,13 @@ passing tests, "F" for failing assertions, "E" for unrescued exceptions, and
 
 === Documentation report
 
-Use this report by calling <tt>Testicles.report_with(:documentation)</tt>
+Use this report by calling <tt>Protest.report_with(:documentation)</tt>
 
 For each testcase in your suite, this will output the description of the test
 case (whatever you provide TestCase.context), followed by the name of each test
 in that context, one per line. For example:
 
-    Testicles.context "A user" do
+    Protest.context "A user" do
       test "has a name"
       test "has an email"
 
@@ -180,17 +180,9 @@ This is similar to the specdoc runner in rspec[http://rspec.info].
 === Defining your own reports
 
 This is really, really easy. All you need to do is subclass Report, and
-register your subclass by calling +Testicles.add_report+. See the
+register your subclass by calling +Protest.add_report+. See the
 documentation for details, or take a look at the source code for
-Testicles::Reports::Progress and Testicles::Reports::Documentation.
-
-== (Best|Worst) name ever
-
-I personally believe the name is full of win. But I understand it's not the
-most marketable name :)
-
-If you hate it, suggest a better name. Or just fork it and name your version
-different, it's open source, after all.
+Protest::Reports::Progress and Protest::Reports::Documentation.
 
 == Legal
 

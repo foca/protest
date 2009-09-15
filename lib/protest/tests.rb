@@ -1,4 +1,4 @@
-module Testicles
+module Protest
   # Encapsulates the relevant information about a test. Useful for certain
   # reports.
   class Test
@@ -36,7 +36,7 @@ module Testicles
       backtrace.first.split(":")[0]
     end
 
-    # Filtered backtrace of the assertion. See Testicles::Utils::BacktraceFilter
+    # Filtered backtrace of the assertion. See Protest::Utils::BacktraceFilter
     # for details on the filtering.
     def backtrace
       @backtrace ||= Utils::BacktraceFilter.filter(raw_backtrace)

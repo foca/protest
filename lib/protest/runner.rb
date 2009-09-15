@@ -1,4 +1,4 @@
-module Testicles
+module Protest
   class Runner
     # Set up the test runner. Takes in a report that will be passed to test
     # cases for reporting.

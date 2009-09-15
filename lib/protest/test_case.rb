@@ -1,14 +1,14 @@
-module Testicles
+module Protest
   # Define a top level test context where to define tests. This works exactly
   # the same as subclassing TestCase explicitly.
   #
-  #     Testicles.context "A user" do
+  #     Protest.context "A user" do
   #       ...
   #     end
   #
   # is just syntax sugar to write:
   #
-  #     class TestUser < Testicles::TestCase
+  #     class TestUser < Protest::TestCase
   #       self.description = "A user"
   #       ...
   #     end
@@ -210,12 +210,12 @@ module Testicles
     private_class_method :do_global_teardown
 
     def self.description #:nodoc:
-      parent = ancestors[1..-1].detect {|a| a < Testicles::TestCase }
+      parent = ancestors[1..-1].detect {|a| a < Protest::TestCase }
       "#{parent.description rescue nil} #{@description}".strip
     end
 
     def self.inherited(child)
-      Testicles.add_test_case(child)
+      Protest.add_test_case(child)
     end
   end
 end

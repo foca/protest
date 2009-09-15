@@ -1,4 +1,4 @@
-module Testicles
+module Protest
   class Report
     # Define an event handler for your report. The different events fired in a
     # report's life cycle are:

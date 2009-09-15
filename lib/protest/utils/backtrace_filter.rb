@@ -1,4 +1,4 @@
-module Testicles
+module Protest
   module Utils
     # Small utility object to filter an error's backtrace and remove any mention
     # of Testicle's own files.

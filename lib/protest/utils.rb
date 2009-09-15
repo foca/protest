@@ -1,4 +1,4 @@
-module Testicles
+module Protest
   # Utility mixins used in the framework, or available to Report authors to
   # provide common functionality to the reports.
   module Utils

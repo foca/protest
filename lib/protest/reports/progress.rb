@@ -1,4 +1,4 @@
-module Testicles
+module Protest
   # The +:progress+ report will output a +.+ for each passed test in the suite,
   # a +P+ for each pending test, an +F+ for each test that failed an assertion,
   # and an +E+ for each test that raised an unrescued exception.

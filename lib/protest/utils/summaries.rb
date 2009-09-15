@@ -1,4 +1,4 @@
-module Testicles
+module Protest
   module Utils
     # Mixin that provides summaries for your text based test runs.
     module Summaries
