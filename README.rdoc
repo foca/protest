@@ -30,7 +30,7 @@ Protest.
 
 Or
 
-    rip install git://github.com/foca/protest.git v0.2
+    rip install git://github.com/foca/protest.git v0.2.1
 
 == Assertions
 
