@@ -33,5 +33,6 @@ lib/protest/report.rb
 lib/protest/reports.rb
 lib/protest/reports/progress.rb
 lib/protest/reports/documentation.rb
+lib/protest/rails.rb
 ]
 end
