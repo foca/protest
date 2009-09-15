@@ -48,7 +48,7 @@ module Protest
     # is aliased as +before+ for your comfort.
     def self.setup(&block)
       define_method :setup do
-        super
+        super()
         instance_eval(&block)
       end
     end
@@ -70,7 +70,7 @@ module Protest
     def self.global_setup(&block)
       (class << self; self; end).class_eval do
         define_method :do_global_setup do
-          super
+          super()
           instance_eval(&block)
         end
       end
@@ -81,7 +81,7 @@ module Protest
     def self.teardown(&block)
       define_method :teardown do
         instance_eval(&block)
-        super
+        super()
       end
     end
 
@@ -99,7 +99,7 @@ module Protest
       (class << self; self; end).class_eval do
         define_method :do_global_teardown do
           instance_eval(&block)
-          super
+          super()
         end
       end
     end
