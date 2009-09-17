@@ -36,6 +36,10 @@ module Protest
       end
     end
 
+    on :test do |report, test|
+      report.tests << test
+    end
+
     on :start do |report|
       report.instance_eval { @started_at = Time.now }
     end
@@ -100,9 +104,13 @@ module Protest
       @assertions || 0
     end
 
+    def tests
+      @tests ||= []
+    end
+
     # Amount ot tests run (whether passed, pending, failed, or errored.)
     def total_tests
-      passes.size + failures.size + errors.size + pendings.size
+      tests.size
     end
 
     # Seconds taken since the test suite started running

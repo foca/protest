@@ -27,10 +27,15 @@ module Protest
   class TestCase
     # Run all tests in this context. Takes a Report instance in order to
     # provide output.
-    def self.run(result)
-      result.report("#{description} global setup", false) { do_global_setup }
-      tests.each {|test| test.run(result) }
-      result.report("#{description} global teardown", false) { do_global_teardown }
+    def self.run(runner)
+      runner.report(TestWrapper.new(:setup, self), true)
+      tests.each {|test| runner.report(test, false) }
+      runner.report(TestWrapper.new(:teardown, self), true)
+    rescue Exception => e
+      # If any exception bubbles up here, then it means it was during the
+      # global setup/teardown blocks, so let's just skip the rest of this
+      # context.
+      return
     end
 
     # Tests added to this context.
@@ -104,7 +109,6 @@ module Protest
       end
     end
 
-
     # Define a new test context nested under the current one. All +setup+ and
     # +teardown+ blocks defined on the current context will be inherited by the
     # new context. This method is aliased as +describe+ for your comfort.
@@ -148,23 +152,22 @@ module Protest
     #
     # If the test's block is nil, then the test will be marked as pending and
     # nothing will be run.
-    def run(runner)
-      @runner = runner
+    def run(report)
+      @report = report
+      pending if test.nil?
 
-      runner.report(self) do
-        pending if test.nil?
-
-        setup
-        instance_eval(&test)
-        teardown
-      end
+      setup
+      instance_eval(&test)
+      teardown
+      @report = nil
     end
 
     # Ensure a condition is met. This will raise AssertionFailed if the
     # condition isn't met. You can override the default failure message
     # by passing it as an argument.
     def assert(condition, message="Expected condition to be satisfied")
-      @runner.assert(condition, message)
+      @report.add_assertion
+      raise AssertionFailed, message unless condition
     end
 
     # Provided for Test::Unit compatibility, this lets you include
@@ -216,6 +219,23 @@ module Protest
 
     def self.inherited(child)
       Protest.add_test_case(child)
+    end
+
+    # Provides the TestCase API for global setup/teardown blocks, so they can be
+    # "faked" as tests into the reporter (they aren't counted towards the total
+    # number of tests but they could count towards the number of failures/errors.)
+    class TestWrapper #:nodoc:
+      attr_reader :name
+
+      def initialize(type, test_case)
+        @type = type
+        @test = test_case
+        @name = "Global #{@type} for #{test_case.description}"
+      end
+
+      def run(report)
+        @test.send("do_global_#{@type}")
+      end
     end
   end
 end

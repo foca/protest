@@ -20,23 +20,20 @@ module Protest
     end
 
     # Run a test and report if it passes, fails, or is pending. Takes the name
-    # of the test as an argument. You can avoid reporting a passed test by
-    # passing +false+ as a second argument.
-    def report(test, report_success=true)
-      @report.on_test(Test.new(test)) if @report.respond_to?(:on_test)
-      yield
-      @report.on_pass(PassedTest.new(test)) if report_success
+    # of the test as an argument. By passing +true+ as the second argument, you
+    # force any exceptions to be re-raied and the test not reported as a pass
+    # after it finishes (for global setup/teardown blocks)
+    def report(test, running_global_setup_or_teardown=false)
+      @report.on_test(Test.new(test)) if @report.respond_to?(:on_test) && !running_global_setup_or_teardown
+      test.run(@report)
+      @report.on_pass(PassedTest.new(test)) unless running_global_setup_or_teardown
     rescue Pending => e
       @report.on_pending(PendingTest.new(test, e))
     rescue AssertionFailed => e
       @report.on_failure(FailedTest.new(test, e))
     rescue Exception => e
       @report.on_error(ErroredTest.new(test, e))
-    end
-
-    def assert(condition, message) #:nodoc:
-      @report.add_assertion
-      raise AssertionFailed, message unless condition
+      raise if running_global_setup_or_teardown
     end
   end
 end

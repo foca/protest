@@ -136,6 +136,78 @@ Protest.describe("A test case") do
     assert_equal 2, report.total_tests
   end
 
+  context "with global setup and teardown blocks" do
+    it "runs global setup blocks only once" do
+      report = mock_test_case do
+        global_setup do
+          @foo ||= 0
+          @foo += 1
+        end
+
+        def self.foo
+          @foo
+        end
+
+        test "first test" do
+          assert self.class.foo == 1
+        end
+
+        test "second test" do
+          assert self.class.foo == 1
+        end
+      end
+
+      assert_equal 2, report.passes.size
+      #assert_equal 2, report.total_tests
+    end
+
+    it "runs global teardown blocks only once" do
+      report = mock_test_case do
+        global_setup do
+          @foo = 0
+        end
+
+        global_teardown do
+          @foo += 1
+        end
+
+        def self.foo
+          @foo
+        end
+
+        test "first test" do
+          assert self.class.foo == 0
+        end
+
+        test "second test" do
+          assert self.class.foo == 0
+        end
+      end
+
+      assert_equal 2, report.passes.size
+      assert_equal 2, report.total_tests
+    end
+
+    it "reports a failure in a global_setup and stops running the test case" do
+      report = mock_test_case do
+        global_setup do
+          raise "foo"
+        end
+
+        test "first test" do
+          assert true
+        end
+
+        test "second test" do
+          assert true
+        end
+      end
+
+      assert_equal 1, report.errors.size
+      assert_equal 0, report.total_tests
+    end
+  end
+
   context "setting the description of a nested context" do
     it "includes the description of the parent" do
       report = mock_test_case do
