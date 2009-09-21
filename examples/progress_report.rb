@@ -1,13 +1,13 @@
-require "testicles"
+require "protest"
 
-Testicles.context("A few tests") do
+Protest.context("A few tests") do
   global_setup do
     @falafel ||= 0
     @falafel += 1
   end
 
   global_teardown do
-    raise Testicles::AssertionFailed, "@falafel isn't 1" unless @falafel == 1
+    raise Protest::AssertionFailed, "@falafel isn't 1" unless @falafel == 1
   end
 
   setup do
@@ -20,7 +20,7 @@ Testicles.context("A few tests") do
     end
 
     global_teardown do
-      raise Testicles::AssertionFailed, "@falafel isn't 2" unless @falafel == 2
+      raise Protest::AssertionFailed, "@falafel isn't 2" unless @falafel == 2
       @falafel -= 1
     end
 

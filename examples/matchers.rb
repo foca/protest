@@ -1,4 +1,4 @@
-require "testicles"
+require "protest"
 
 class Object
   def should(expectation)
@@ -23,7 +23,7 @@ module Matchers
   end
 end
 
-Testicles.describe("A number") do
+Protest.describe("A number") do
   include Matchers
 
   it "equals itself" do
