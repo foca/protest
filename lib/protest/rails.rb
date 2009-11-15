@@ -11,8 +11,14 @@ end
 module Protest
   module Rails
     # Exclude rails' files from the errors
-    class Utils::BacktraceFilter
+    class BacktraceFilter < Utils::BacktraceFilter
       include ::Rails::BacktraceFilterForTestUnit
+
+      def filter_backtrace(backtrace, prefix=nil)
+        super(backtrace, prefix).reject do |line|
+          line.starts_with?("/")
+        end
+      end
     end
 
     # Wrap all tests in a database transaction.
@@ -69,4 +75,6 @@ module Protest
   class << self
     alias_method :describe, :context
   end
+
+  self.backtrace_filter = Rails::BacktraceFilter.new
 end
