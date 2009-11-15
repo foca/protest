@@ -52,7 +52,7 @@ module Protest
     # Add a test to be run in this context. This method is aliased as +it+ and
     # +should+ for your comfort.
     def self.test(name, &block)
-      tests << new(name, &block)
+      tests << new(name, caller.at(0), &block)
     end
 
     # Add a setup block to be run before each test in this context. This method
@@ -146,8 +146,9 @@ module Protest
 
     # Initialize a new instance of a single test. This test can be run in
     # isolation by calling TestCase#run.
-    def initialize(name, &block)
+    def initialize(name, location, &block)
       @test = block
+      @location = location
       @name = name
     end
 
@@ -185,7 +186,7 @@ module Protest
     # Make the test be ignored as pending. You can override the default message
     # that will be sent to the report by passing it as an argument.
     def pending(message="Not Yet Implemented")
-      raise Pending, message
+      raise Pending, message, [@location, *caller].uniq
     end
 
     # Name of the test
