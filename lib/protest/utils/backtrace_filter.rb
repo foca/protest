@@ -6,6 +6,9 @@ module Protest
       ESCAPE_PATHS = [
         # Path to the library's 'lib' dir.
         /^#{Regexp.escape(File.dirname(File.dirname(File.dirname(File.expand_path(__FILE__)))))}/,
+
+        # Users certainly don't care about what test loader is being used
+        %r[lib/rake/rake_test_loader.rb], %r[bin/testrb]
       ]
 
       # Convenience method to clean the API a bit
