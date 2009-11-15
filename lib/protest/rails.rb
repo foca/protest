@@ -10,6 +10,11 @@ end
 
 module Protest
   module Rails
+    # Exclude rails' files from the errors
+    class Utils::BacktraceFilter
+      include ::Rails::BacktraceFilterForTestUnit
+    end
+
     # Wrap all tests in a database transaction.
     #
     # TODO: make this optional somehow (yet enabled by default) so users of
