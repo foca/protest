@@ -14,10 +14,10 @@ module Protest
       # Filter the backtrace, removing any reference to files located in
       # BASE_PATH.
       def filter_backtrace(backtrace, prefix=nil)
-        ESCAPE_PATHS << prefix unless prefix.nil?
+        paths = ESCAPE_PATHS + [prefix].compact
         backtrace.reject do |line|
           file = line.split(":").first
-          ESCAPE_PATHS.any? {|path| File.expand_path(file) =~ path }
+          paths.any? {|path| File.expand_path(file) =~ path }
         end
       end
     end
