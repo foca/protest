@@ -1,7 +1,12 @@
 require "protest"
 require "test/unit/assertions"
 require "action_controller/test_case"
-require "webrat"
+
+begin
+  require "webrat"
+rescue LoadError
+  $no_webrat = true
+end
 
 module Protest
   module Rails
@@ -38,7 +43,7 @@ module Protest
     # should use webrat for integration tests. Really.
     class IntegrationTest < RequestTest
       include ActionController::Integration::Runner
-      include Webrat::Methods
+      include Webrat::Methods unless $no_webrat
     end
   end
 
