@@ -12,10 +12,8 @@ Protest.describe("A test case") do
     assert_equal 2, report.assertions
   end
 
-  it "allows including assertions from Test::Unit" do
+  it "includes assertions from Test::Unit" do
     report = mock_test_case do
-      include ::Test::Unit::Assertions
-
       test "a Test::Unit assertion that passes, makes the test pass" do
         assert_match /foo/, "foobar"
       end

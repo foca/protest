@@ -25,6 +25,12 @@ module Protest
   # your tests by declaring nested contexts inside the class. See
   # TestCase.context.
   class TestCase
+    begin
+      require "test/unit/assertions"
+      include Test::Unit::Assertions
+    rescue LoadError
+    end
+
     # Run all tests in this context. Takes a Report instance in order to
     # provide output.
     def self.run(runner)

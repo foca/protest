@@ -39,5 +39,4 @@ end
 
 class Protest::TestCase
   include TestHelpers
-  include Test::Unit::Assertions
 end

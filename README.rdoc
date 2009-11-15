@@ -8,11 +8,11 @@
       end
 
       test "has a name" do
-        assert @user.name == "John Doe"
+        assert_equal "John Doe", @user.name
       end
 
       test "has an email" do
-        assert @user.email == "john@example.org"
+        assert_equal "john@example.org", @user.email
       end
     end
 
@@ -31,22 +31,6 @@ Protest.
 Or
 
     rip install git://github.com/foca/protest.git v0.2.2
-
-== Assertions
-
-You probably wonder why the above example doesn't have any assertion other than
-+assert+. Where's +assert_equal+, right? Well, the idea is to keep it slim. If
-you want to use more assertions, you're free to define your own. You can also
-use all the assertions provided by Test::Unit, by just including them:
-
-    require "test/unit/assertions"
-
-    class Protest::TestCase
-      include Test::Unit::Assertions
-    end
-
-You could also define rspec-like matchers if you like that. See +matchers.rb+ in
-the examples directory for an example.
 
 == Setup and teardown
 
@@ -130,6 +114,32 @@ Or you can call the +pending+ method from inside your test.
         assert false
       end
     end
+
+== Custom assertions
+
+By default Protest bundles all the assertions defined in Test::Unit (it
+literally requires them), so check its documentation for all the goodness.
+
+If you want to add assertions, just define methods that rely on +assert+ or
++assert_block+. The former takes a boolean and an optional error message as
+arguments, while the latter takes an optional error message as an argument and
+a block. The assertions is considered to fail if the block evaluates to neither
++false+ nor +nil+.
+
+For example:
+
+    module AwesomenessAssertions
+      def assert_awesomeness(object)
+        assert object.awesome?, "#{object.inspect} is not awesome enough"
+      end
+    end
+
+    class Protest::TestCase
+      include AwesomenessAssertions
+    end
+
+You could also define rspec-like matchers if you like that style. See 
++matchers.rb+ in the examples directory for an example.
 
 == Reports
 
