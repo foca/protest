@@ -1,11 +1,11 @@
 Gem::Specification.new do |s|
   s.name    = "protest"
-  s.version = "0.2.2"
-  s.date    = "2009-09-17"
+  s.version = "0.2.3.alpha"
+  s.date    = "2009-11-14"
 
   s.description = "Protest is a tiny, simple, and easy-to-extend test framework"
   s.summary     = s.description
-  s.homepage    = "http://github.com/foca/protest"
+  s.homepage    = "http://rubyprotest.org"
 
   s.authors = ["Nicolás Sanguinetti"]
   s.email   = "contacto@nicolassanguinetti.info"
