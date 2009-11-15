@@ -11,11 +11,6 @@ module Protest
         %r[lib/rake/rake_test_loader.rb], %r[bin/testrb]
       ]
 
-      # Convenience method to clean the API a bit
-      def self.filter(backtrace)
-        new.filter_backtrace(backtrace)
-      end
-
       # Filter the backtrace, removing any reference to files located in
       # BASE_PATH.
       def filter_backtrace(backtrace, prefix=nil)

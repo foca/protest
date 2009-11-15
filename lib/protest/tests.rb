@@ -39,7 +39,7 @@ module Protest
     # Filtered backtrace of the assertion. See Protest::Utils::BacktraceFilter
     # for details on the filtering.
     def backtrace
-      @backtrace ||= Utils::BacktraceFilter.filter(raw_backtrace)
+      @backtrace ||= Protest.backtrace_filter.filter_backtrace(raw_backtrace)
     end
 
     # Raw backtrace, as provided by the error.

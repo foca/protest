@@ -65,6 +65,17 @@ module Protest
     available_reports.fetch(name).new(*report_args)
   end
 
+  # Set what object will filter the backtrace. It must respond to
+  # +filter_backtrace+, taking a backtrace array and a prefix path.
+  def self.backtrace_filter=(filter)
+    @backtrace_filter = filter
+  end
+
+  # The object that filters the backtrace
+  def self.backtrace_filter
+    @backtrace_filter
+  end
+
   def self.available_test_cases
     @test_cases ||= []
   end
@@ -90,6 +101,7 @@ require "protest/reports/documentation"
 
 Protest.autorun = true
 Protest.report_with(:progress)
+Protest.backtrace_filter = Protest::Utils::BacktraceFilter.new
 
 at_exit do
   Protest.run_all_tests! if Protest.autorun?
