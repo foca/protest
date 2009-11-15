@@ -1,4 +1,6 @@
 module Protest
+  VERSION = "0.2.2"
+
   # Exception raised when an assertion fails. See TestCase#assert
   class AssertionFailed < StandardError; end
 
