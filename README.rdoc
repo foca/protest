@@ -138,19 +138,19 @@ For example:
       include AwesomenessAssertions
     end
 
-You could also define rspec-like matchers if you like that style. See 
-+matchers.rb+ in the examples directory for an example.
+You could also define rspec-like matchers if you like that style. See
+<tt>matchers.rb</tt> in the examples directory for an example.
 
 == Reports
 
 Protest can report the output of a test suite in many ways. The library ships
-with a +:progress+ report, and a +:documentation+ report, +:progress+ being the
-default.
+with a <tt>:progress</tt> report, and a <tt>:documentation</tt> report,
+<tt>:progress</tt> being the default.
 
 === Progress report
 
-Use this report by calling <tt>Protest.report_with(:progress)</tt> (this isn't
-needed though, since this is the default report.)
+This is the default option, but you can force this by calling 
+<tt>Protest.report_with(:progress)</tt>.
 
 The progress report will output the "classic" Test::Unit output of periods for
 passing tests, "F" for failing assertions, "E" for unrescued exceptions, and 
@@ -173,7 +173,7 @@ in that context, one per line. For example:
       end
     end
 
-Will output, when run with the +:documentation+ report:
+Will output, when run with the <tt>:documentation</tt> report:
 
     A user
     - has a name (Not Yet Implemented)
