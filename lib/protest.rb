@@ -1,5 +1,5 @@
 module Protest
-  VERSION = "0.2.3.alpha"
+  VERSION = "0.2.3"
 
   # Exception raised when an assertion fails. See TestCase#assert
   class AssertionFailed < StandardError; end
